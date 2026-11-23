@@ -37,10 +37,19 @@
         "backgroundColor": "#0B1220",
         "foregroundImage": "./assets/android-icon-foreground.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d9c40c30-2834-4830-9536-8ae00da8884d"
+      }
+    },
+    "owner": "glacyte"
   }
 }
