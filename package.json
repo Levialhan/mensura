@@ -8,6 +8,7 @@
     "expo-haptics": "~58.0.8",
     "expo-linear-gradient": "~58.0.4",
     "expo-sensors": "~58.0.5",
+    "expo-splash-screen": "~58.0.14",
     "expo-status-bar": "~58.0.5",
     "react": "19.3.0",
     "react-native": "0.88.1",
@@ -18,6 +19,7 @@
     "@types/react": "~19.3.0",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~58.0.4",
+    "sharp": "^0.35.5",
     "typescript": "~6.0.3"
   },
   "scripts": {

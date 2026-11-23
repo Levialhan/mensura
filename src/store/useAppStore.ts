@@ -12,9 +12,11 @@ import { create } from 'zustand';
 export type Screen =
   | 'home'
   | 'level'
+  | 'compass'
   | 'converter'
   | 'tip'
   | 'stopwatch'
+  | 'ruler'
   | 'pro';
 
 interface AppState {

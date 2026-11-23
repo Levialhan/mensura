@@ -13,7 +13,7 @@ export default function HomeScreen() {
   const isPro = useAppStore((s) => s.isPro);
 
   const handlePress = (tool: Tool) => {
-    if (tool.tier === 'pro') {
+    if (tool.tier === 'pro' && !isPro) {
       navigate('pro');
       return;
     }
@@ -38,7 +38,7 @@ export default function HomeScreen() {
         <View style={styles.grid}>
           {TOOLS.map((tool) => (
             <View key={tool.id} style={styles.cell}>
-              <ToolCard tool={tool} onPress={handlePress} />
+              <ToolCard tool={tool} isPro={isPro} onPress={handlePress} />
             </View>
           ))}
         </View>

@@ -5,11 +5,12 @@ import { colors, font, radius, spacing } from '../theme';
 
 type Props = {
   tool: Tool;
+  isPro: boolean;
   onPress: (tool: Tool) => void;
 };
 
-export default function ToolCard({ tool, onPress }: Props) {
-  const locked = tool.tier === 'pro';
+export default function ToolCard({ tool, isPro, onPress }: Props) {
+  const locked = tool.tier === 'pro' && !isPro;
   const soon = tool.status === 'soon';
   const iconColor = locked ? colors.pro : colors.primary;
   const iconBg = locked ? colors.proSoft : colors.primarySoft;
