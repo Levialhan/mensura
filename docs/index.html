@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mensura — Your Pocket Measurement Toolkit</title>
+  <meta name="description" content="Mensura is a private, offline measurement toolkit: level, compass, ruler, protractor, flashlight, QR scanner, unit converter and more." />
+  <style>
+    :root {
+      --navy: #0B1220;
+      --navy-2: #1D2B53;
+      --ink: #0F172A;
+      --muted: #64748B;
+      --accent: #34D399;
+      --gold: #F5C542;
+      --line: #E2E8F0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: #F4F6FB;
+      line-height: 1.6;
+    }
+    .hero {
+      background: linear-gradient(180deg, var(--navy-2), var(--navy));
+      color: #fff;
+      text-align: center;
+      padding: 72px 24px 64px;
+    }
+    .logo {
+      width: 96px;
+      height: 96px;
+      border-radius: 24px;
+      margin: 0 auto 20px;
+      background: linear-gradient(180deg, #1D2B53, #0B1220);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .logo svg { display: block; }
+    .hero h1 { margin: 0; font-size: 40px; letter-spacing: -0.5px; }
+    .hero p.tag { color: #AEB9CF; font-size: 18px; margin: 8px 0 0; }
+    .badges { margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #E8EEF9;
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    main { max-width: 880px; margin: 0 auto; padding: 40px 20px 64px; }
+    h2 { font-size: 24px; margin: 0 0 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .tool {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .tool .name { font-weight: 700; font-size: 16px; }
+    .tool .desc { color: var(--muted); font-size: 14px; margin-top: 2px; }
+    .pro { float: right; font-size: 11px; font-weight: 800; letter-spacing: 0.5px; color: #B8860B; background: #FBF3DE; border-radius: 999px; padding: 2px 8px; }
+    .privacy { margin-top: 40px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 28px; text-align: center; }
+    .privacy h2 { margin-bottom: 8px; }
+    .privacy p { margin: 0 0 16px; color: var(--muted); }
+    .btn {
+      display: inline-block;
+      background: var(--navy);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 12px 28px;
+    }
+    .btn:hover { background: var(--navy-2); }
+    footer { text-align: center; color: var(--muted); font-size: 13px; padding: 0 20px 48px; }
+    footer a { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="logo">
+      <svg width="56" height="56" viewBox="0 0 1024 1024">
+        <rect x="162" y="412" width="700" height="200" rx="100" fill="#FFFFFF"/>
+        <rect x="300" y="484" width="6" height="56" rx="3" fill="#94A3B8"/>
+        <rect x="360" y="464" width="6" height="96" rx="3" fill="#94A3B8"/>
+        <rect x="664" y="464" width="6" height="96" rx="3" fill="#94A3B8"/>
+        <rect x="724" y="484" width="6" height="56" rx="3" fill="#94A3B8"/>
+        <circle cx="512" cy="512" r="60" fill="#34D399" stroke="#059669" stroke-width="8"/>
+        <circle cx="492" cy="492" r="16" fill="#A7F3D0"/>
+      </svg>
+    </div>
+    <h1>Mensura</h1>
+    <p class="tag">Your pocket measurement toolkit</p>
+    <div class="badges">
+      <span class="badge">100% offline</span>
+      <span class="badge">No account</span>
+      <span class="badge">No tracking</span>
+    </div>
+  </div>
+
+  <main>
+    <h2>Everyday tools, always in your pocket</h2>
+    <div class="grid">
+      <div class="tool"><span class="name">Level</span><span class="desc">Spirit level &amp; bullseye with haptic feedback</span></div>
+      <div class="tool"><span class="name">Compass</span><span class="desc">Live heading with degrees and cardinal direction</span></div>
+      <div class="tool"><span class="name">Converter</span><span class="desc">Length, weight, volume, temperature &amp; more</span></div>
+      <div class="tool"><span class="name">Tip Split</span><span class="desc">Tip, tax and per-person bill splitting</span></div>
+      <div class="tool"><span class="name">Stopwatch</span><span class="desc">Lap timer with split times</span></div>
+      <div class="tool"><span class="name">Ruler</span><span class="pro">PRO</span><span class="desc">On-screen ruler with card calibration</span></div>
+      <div class="tool"><span class="name">Protractor</span><span class="pro">PRO</span><span class="desc">Measure any angle</span></div>
+      <div class="tool"><span class="name">Flashlight</span><span class="pro">PRO</span><span class="desc">Torch with steady &amp; strobe modes</span></div>
+      <div class="tool"><span class="name">QR Scanner</span><span class="pro">PRO</span><span class="desc">Scan QR codes, open or share the result</span></div>
+      <div class="tool"><span class="name">Altimeter</span><span class="pro">PRO</span><span class="desc">Air pressure &amp; relative altitude</span></div>
+    </div>
+
+    <div class="privacy">
+      <h2>Private by design</h2>
+      <p>No account, no server, no analytics. Everything runs on your device and stays there.</p>
+      <a class="btn" href="privacy-policy.html">Read the privacy policy</a>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Mensura · <a href="privacy-policy.html">Privacy Policy</a>
+  </footer>
+</body>
+</html>
