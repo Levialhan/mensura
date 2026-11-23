@@ -4,9 +4,9 @@ A private, offline **pocket measurement toolkit** for Android & iOS — built wi
 
 ## Tools
 
-**Free:** Level · Compass · Unit Converter · Tip Split · Stopwatch
+**Free:** Level · Compass · Calculator · Unit Converter · Countdown · Tip Split · Stopwatch · Random
 
-**Pro (one-time unlock):** Ruler · Protractor · Flashlight · QR Scanner · Altimeter
+**Pro (one-time unlock):** Ruler · Protractor · Magnifier · Flashlight · QR Scanner · Altimeter · Pedometer · Speedometer · Sound Meter
 
 ## Development
 

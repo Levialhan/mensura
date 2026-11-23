@@ -57,7 +57,7 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACTIVITY_RECOGNITION"
       ],
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/favicon.png"
