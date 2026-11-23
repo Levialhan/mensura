@@ -1,20 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useAppStore } from './src/store/useAppStore';
+import HomeScreen from './src/screens/HomeScreen';
+import LevelScreen from './src/screens/LevelScreen';
+import UnitConverterScreen from './src/screens/UnitConverterScreen';
+import TipCalculatorScreen from './src/screens/TipCalculatorScreen';
+import StopwatchScreen from './src/screens/StopwatchScreen';
+import ProScreen from './src/screens/ProScreen';
+
+function Router() {
+  const screen = useAppStore((s) => s.screen);
+
+  switch (screen) {
+    case 'level':
+      return <LevelScreen />;
+    case 'converter':
+      return <UnitConverterScreen />;
+    case 'tip':
+      return <TipCalculatorScreen />;
+    case 'stopwatch':
+      return <StopwatchScreen />;
+    case 'pro':
+      return <ProScreen />;
+    case 'home':
+    default:
+      return <HomeScreen />;
+  }
+}
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <Router />
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -1,15 +1,18 @@
 {
   "expo": {
-    "name": "mensura",
+    "name": "Mensura",
     "slug": "mensura",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "mensura",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mensura.app"
     },
     "android": {
+      "package": "com.mensura.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",

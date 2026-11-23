@@ -1,4 +1,4 @@
-This is an Expo/React Native mobile application. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
+This is an Expo/React Native mobile application (Mensura — a pocket measurement toolkit). Prioritize mobile-first patterns, performance, and cross-platform compatibility.
 
 ## Expo has changed — do not trust your training data
 
@@ -7,6 +7,8 @@ Expo ships breaking changes every SDK release. APIs you remember are likely rena
 1. Read the major version of the `expo` package in `package.json`.
 2. Fetch the matching versioned docs: `https://docs.expo.dev/versions/v<major>.0.0/`
 3. For anything else, fetch https://docs.expo.dev/llms.txt — an index of all Expo docs with corrections to common LLM misconceptions. Follow its links to the specific page you need; never answer from memory.
+
+This app is on **Expo SDK 58** (React Native 0.88, React 19.3).
 
 ## Commands
 
@@ -25,9 +27,18 @@ Run lint and typecheck before declaring any task done.
 
 ## Navigation & Routing
 
-- Use **Expo Router** for all navigation. Routes live in `src/app/` — every file there is a screen, `_layout.tsx` files define navigators. Keep non-route code (components, hooks, utils) outside `src/app/`.
-- Import `Link`, `router`, and `useLocalSearchParams` from `expo-router`.
-- Docs: https://docs.expo.dev/router/introduction.md
+This app does **not** use Expo Router. There is no `src/app/` directory and `expo-router` is not a dependency.
+
+- `src/store/useAppStore.ts` is the single state machine: the active screen (`home`, `level`, `converter`, `tip`, `stopwatch`, `pro`) and the `isPro` entitlement flag.
+- `App.tsx` picks the visible screen with a `switch` on that store, wrapped in `SafeAreaProvider`.
+- Screens live in `src/screens/`. Each screen sets its own `StatusBar` style (light on the dark instrument screens, dark elsewhere).
+- New navigation state belongs in `useAppStore`, not a component's `useState`.
+
+## Tool registry & Pro gating
+
+- `src/config/tools.ts` is the source of truth for the tool list. Each tool has a `tier` (`free` | `pro`) and `status` (`ready` | `soon`).
+- Pro tools render a lock and route to the paywall (`pro` screen). `soon` free tools show a "coming soon" alert.
+- Entitlements live on `useAppStore.isPro`. `unlockPro` / `restorePro` are currently local-only stubs — wire them to RevenueCat (`react-native-purchases`) and persist to storage when billing is added.
 
 ## Building with EAS
 
