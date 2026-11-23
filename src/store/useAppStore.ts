@@ -13,14 +13,21 @@ export type Screen =
   | 'home'
   | 'level'
   | 'compass'
+  | 'calculator'
   | 'converter'
+  | 'countdown'
   | 'tip'
   | 'stopwatch'
+  | 'random'
   | 'ruler'
   | 'protractor'
+  | 'magnifier'
   | 'flashlight'
   | 'qr'
   | 'altimeter'
+  | 'pedometer'
+  | 'speedometer'
+  | 'sound'
   | 'pro';
 
 interface AppState {

@@ -25,6 +25,18 @@
           "barcodeScannerEnabled": true
         }
       ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow Mensura to use the microphone for the sound level meter."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow Mensura to use your location for the speedometer."
+        }
+      ],
       "expo-font"
     ],
     "ios": {
@@ -39,9 +51,13 @@
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACTIVITY_RECOGNITION"
       ],
-      "versionCode": 2
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
