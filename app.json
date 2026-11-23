@@ -29,10 +29,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.mensura.app"
+      "bundleIdentifier": "com.mensura.toolkit"
     },
     "android": {
-      "package": "com.mensura.app",
+      "package": "com.mensura.toolkit",
       "adaptiveIcon": {
         "backgroundColor": "#0B1220",
         "foregroundImage": "./assets/android-icon-foreground.png"

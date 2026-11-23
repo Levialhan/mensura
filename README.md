@@ -46,7 +46,7 @@ npx eas-cli submit --platform android                       # upload to Play Con
 4. ✅ Store listing copy (`store/listing.md`)
 5. ✅ Privacy policy (`store/privacy-policy.md` + hostable `store/privacy-policy.html`)
 6. ⬜ Build AAB (running) and download from EAS
-7. ⬜ **Create app** in [Play Console](https://play.google.com/console) with package `com.mensura.app`
+7. ✅ **Create app** in [Play Console](https://play.google.com/console) with package `com.mensura.toolkit`
 8. ⬜ **Host** the privacy policy and paste its URL
 9. ⬜ Upload AAB → **Internal testing** track → add testers → roll out
 10. ⬜ Complete **store listing** (screenshots, icon, content rating, data-safety form: "no data collected")
