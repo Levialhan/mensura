@@ -17,6 +17,10 @@ export type Screen =
   | 'tip'
   | 'stopwatch'
   | 'ruler'
+  | 'protractor'
+  | 'flashlight'
+  | 'qr'
+  | 'altimeter'
   | 'pro';
 
 interface AppState {

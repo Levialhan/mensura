@@ -16,7 +16,16 @@
           "resizeMode": "contain",
           "backgroundColor": "#0B1220"
         }
-      ]
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Mensura to access the camera",
+          "recordAudioAndroid": false,
+          "barcodeScannerEnabled": true
+        }
+      ],
+      "expo-font"
     ],
     "ios": {
       "supportsTablet": true,

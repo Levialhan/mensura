@@ -7,6 +7,10 @@ import UnitConverterScreen from './src/screens/UnitConverterScreen';
 import TipCalculatorScreen from './src/screens/TipCalculatorScreen';
 import StopwatchScreen from './src/screens/StopwatchScreen';
 import RulerScreen from './src/screens/RulerScreen';
+import ProtractorScreen from './src/screens/ProtractorScreen';
+import FlashlightScreen from './src/screens/FlashlightScreen';
+import QrScannerScreen from './src/screens/QrScannerScreen';
+import AltimeterScreen from './src/screens/AltimeterScreen';
 import ProScreen from './src/screens/ProScreen';
 
 function Router() {
@@ -25,6 +29,14 @@ function Router() {
       return <StopwatchScreen />;
     case 'ruler':
       return <RulerScreen />;
+    case 'protractor':
+      return <ProtractorScreen />;
+    case 'flashlight':
+      return <FlashlightScreen />;
+    case 'qr':
+      return <QrScannerScreen />;
+    case 'altimeter':
+      return <AltimeterScreen />;
     case 'pro':
       return <ProScreen />;
     case 'home':

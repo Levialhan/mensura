@@ -38,8 +38,8 @@ export const TOOLS: Tool[] = [
 
   // ---- Pro (locked) ----
   { id: 'ruler', name: 'Ruler', subtitle: 'Measure on screen', icon: 'ruler', tier: 'pro', status: 'ready', screen: 'ruler' },
-  { id: 'protractor', name: 'Protractor', subtitle: 'Measure any angle', icon: 'angle-acute', tier: 'pro', status: 'soon' },
-  { id: 'flashlight', name: 'Flashlight', subtitle: 'Torch, strobe & SOS', icon: 'flashlight', tier: 'pro', status: 'soon' },
-  { id: 'qr', name: 'QR Scanner', subtitle: 'Scan QR & barcodes', icon: 'qrcode-scan', tier: 'pro', status: 'soon' },
-  { id: 'altimeter', name: 'Altimeter', subtitle: 'Altitude & pressure', icon: 'image-filter-hdr', tier: 'pro', status: 'soon' },
+  { id: 'protractor', name: 'Protractor', subtitle: 'Measure any angle', icon: 'angle-acute', tier: 'pro', status: 'ready', screen: 'protractor' },
+  { id: 'flashlight', name: 'Flashlight', subtitle: 'Torch & strobe', icon: 'flashlight', tier: 'pro', status: 'ready', screen: 'flashlight' },
+  { id: 'qr', name: 'QR Scanner', subtitle: 'Scan QR codes', icon: 'qrcode-scan', tier: 'pro', status: 'ready', screen: 'qr' },
+  { id: 'altimeter', name: 'Altimeter', subtitle: 'Altitude & pressure', icon: 'image-filter-hdr', tier: 'pro', status: 'ready', screen: 'altimeter' },
 ];
