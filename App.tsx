@@ -20,6 +20,7 @@ import AltimeterScreen from './src/screens/AltimeterScreen';
 import PedometerScreen from './src/screens/PedometerScreen';
 import SpeedometerScreen from './src/screens/SpeedometerScreen';
 import SoundLevelMeterScreen from './src/screens/SoundLevelMeterScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 import ProScreen from './src/screens/ProScreen';
 
 function Router() {
@@ -60,6 +61,8 @@ function Router() {
       return <SpeedometerScreen />;
     case 'sound':
       return <SoundLevelMeterScreen />;
+    case 'settings':
+      return <SettingsScreen />;
     case 'pro':
       return <ProScreen />;
     case 'home':
