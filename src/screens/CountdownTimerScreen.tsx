@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -63,7 +63,7 @@ export default function CountdownTimerScreen() {
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Countdown" onBack={goHome} />
 
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <Text style={[styles.time, done && styles.timeDone]}>{fmt(remaining)}</Text>
 
         <View style={styles.presets}>
@@ -106,14 +106,14 @@ export default function CountdownTimerScreen() {
             <MaterialCommunityIcons name="stop" size={22} color={colors.text} />
           </Pressable>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  body: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg, gap: spacing.xl },
+  body: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg, gap: spacing.xl },
   time: {
     fontSize: 88,
     fontWeight: '800',

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
@@ -28,7 +28,7 @@ export default function RandomNumberScreen() {
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Random Number" onBack={goHome} />
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <View style={styles.row}>
           <View style={styles.field}>
             <Text style={styles.label}>Min</Text>
@@ -43,7 +43,7 @@ export default function RandomNumberScreen() {
           <Text style={styles.btnText}>Generate</Text>
         </Pressable>
         {result != null && <Text style={styles.result}>{result}</Text>}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -51,7 +51,7 @@ export default function RandomNumberScreen() {
 const createStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.bg },
-    body: { flex: 1, padding: spacing.lg, gap: spacing.lg },
+    body: { flexGrow: 1, padding: spacing.lg, gap: spacing.lg, paddingBottom: spacing.xl },
     row: { flexDirection: 'row', gap: spacing.md },
     field: { flex: 1 },
     label: { fontSize: font.sm, fontWeight: '700', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: spacing.sm },

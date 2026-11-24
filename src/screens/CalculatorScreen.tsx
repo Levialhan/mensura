@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
@@ -89,7 +89,7 @@ export default function CalculatorScreen() {
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Calculator" onBack={goHome} />
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <Text style={styles.display} numberOfLines={1} adjustsFontSizeToFit>
           {display}
         </Text>
@@ -111,14 +111,21 @@ export default function CalculatorScreen() {
             </Pressable>
           ))}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  body: { flex: 1, padding: spacing.lg, justifyContent: 'flex-end' },
+  body: {
+    flexGrow: 1,
+    padding: spacing.lg,
+    justifyContent: 'flex-end',
+    width: '100%',
+    maxWidth: 420,
+    alignSelf: 'center',
+  },
   display: {
     fontSize: 64,
     fontWeight: '700',

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -45,7 +45,7 @@ export default function MetronomeScreen() {
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Metronome" onBack={goHome} />
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <Text style={styles.bpm}>{bpm}</Text>
         <Text style={styles.unit}>BPM</Text>
 
@@ -64,7 +64,7 @@ export default function MetronomeScreen() {
         <Pressable style={styles.tap} onPress={tapTempo}>
           <Text style={styles.tapText}>Tap tempo</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -72,7 +72,7 @@ export default function MetronomeScreen() {
 const createStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.bg },
-    body: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg, gap: spacing.sm },
+    body: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg, gap: spacing.sm },
     bpm: { fontSize: 96, fontWeight: '800', color: colors.primary, fontVariant: ['tabular-nums'], letterSpacing: -2 },
     unit: { color: colors.textMuted, fontSize: font.sm, textTransform: 'uppercase', letterSpacing: 2, marginBottom: spacing.xl },
     controls: { flexDirection: 'row', alignItems: 'center', gap: spacing.xl },

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -182,7 +182,7 @@ export default function RandomPickerScreen() {
           ))}
         </View>
 
-        <View style={styles.stage}>
+        <ScrollView style={styles.stage} contentContainerStyle={styles.stageContent} showsVerticalScrollIndicator={false}>
           {mode === 'dice' && (
             <>
               <Animated.View
@@ -235,7 +235,7 @@ export default function RandomPickerScreen() {
               </Pressable>
             </>
           )}
-        </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -270,7 +270,8 @@ const createStyles = (colors: ThemeColors) => StyleSheet.create({
   tabActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   tabText: { color: colors.text, fontWeight: '700', fontSize: font.sm },
   tabTextActive: { color: '#FFFFFF' },
-  stage: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.xl },
+  stage: { flex: 1 },
+  stageContent: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.xl, paddingVertical: spacing.xl },
   resultLabel: { fontSize: font.lg, fontWeight: '700', color: colors.text },
   coin: {
     width: 160,

@@ -63,12 +63,15 @@ export default function RulerScreen() {
   const { colors, isDark } = useTheme();
   const styles = createStyles(colors);
   const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
   const [unit, setUnit] = useState<Unit>('cm');
   const [orientation, setOrientation] = useState<Orientation>('horizontal');
   const [pxPerCm, setPxPerCm] = useState(DEFAULT_PX_PER_CM);
   const [calibrating, setCalibrating] = useState(false);
 
-  const length = orientation === 'horizontal' ? width : height - 260;
+  // In landscape the long edge is horizontal, so always measure along it there.
+  const effectiveOrientation: Orientation = isLandscape ? 'horizontal' : orientation;
+  const length = effectiveOrientation === 'horizontal' ? width : height - 260;
   const ticks = buildTicks(unit, pxPerCm, Math.max(200, length));
   const contentLength = Math.max(length, (ticks[ticks.length - 1]?.x ?? 0) + spacing.xl);
 
@@ -86,7 +89,7 @@ export default function RulerScreen() {
               accessibilityLabel="Toggle orientation"
             >
               <MaterialCommunityIcons
-                name={orientation === 'horizontal' ? 'arrow-up-down' : 'arrow-left-right'}
+                name={effectiveOrientation === 'horizontal' ? 'arrow-up-down' : 'arrow-left-right'}
                 size={18}
                 color={colors.primary}
               />
@@ -99,7 +102,7 @@ export default function RulerScreen() {
       />
 
       <View style={styles.body}>
-        {orientation === 'horizontal' ? (
+        {effectiveOrientation === 'horizontal' ? (
           <View style={styles.rulerWrapH}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ minWidth: width }}>
               <View style={[styles.rulerH, { width: contentLength }]}>

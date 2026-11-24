@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
@@ -29,7 +29,7 @@ export default function PercentageScreen() {
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Percentage" onBack={goHome} />
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <Text style={styles.label}>What is X% of Y?</Text>
           <View style={styles.row}>
@@ -59,7 +59,7 @@ export default function PercentageScreen() {
           </View>
           {sale != null && <Text style={styles.result}>{sale.toFixed(2)}</Text>}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -67,7 +67,7 @@ export default function PercentageScreen() {
 const createStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.bg },
-    body: { flex: 1, padding: spacing.lg, gap: spacing.lg },
+    body: { flexGrow: 1, padding: spacing.lg, gap: spacing.lg, paddingBottom: spacing.xl },
     card: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.lg },
     label: { fontSize: font.sm, fontWeight: '700', color: colors.text, marginBottom: spacing.md },
     row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },

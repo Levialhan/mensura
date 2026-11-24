@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -15,8 +15,8 @@ export default function ProtractorScreen() {
   const goHome = useAppStore((s) => s.goHome);
   const { colors, isDark } = useTheme();
   const styles = createStyles(colors);
-  const { width } = useWindowDimensions();
-  const size = Math.min(width - spacing.xl * 2, 380);
+  const { width, height } = useWindowDimensions();
+  const size = Math.min(width - spacing.xl * 2, 380, Math.max(160, height - 260));
   const cx = size / 2;
   const cy = size / 2;
   const r = size / 2 - 30;
@@ -45,7 +45,7 @@ export default function ProtractorScreen() {
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Protractor" onBack={goHome} />
 
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <View
           style={[styles.canvas, { width: size, height: size }]}
           onStartShouldSetResponder={() => true}
@@ -86,7 +86,7 @@ export default function ProtractorScreen() {
           <MaterialCommunityIcons name="restore" size={16} color={colors.textMuted} />
           <Text style={styles.resetText}>Reset to 0°</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -97,10 +97,11 @@ const createStyles = (colors: ThemeColors) => StyleSheet.create({
     backgroundColor: colors.bg,
   },
   body: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xl,
     gap: spacing.lg,
   },
   canvas: {

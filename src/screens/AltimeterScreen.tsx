@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Barometer } from 'expo-sensors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -49,7 +49,7 @@ export default function AltimeterScreen() {
       <StatusBar style="light" />
       <ScreenHeader title="Altimeter" onBack={goHome} dark />
 
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         {!available ? (
           <View style={styles.center}>
             <MaterialCommunityIcons name="gauge-empty" size={48} color={colors.instrumentMuted} />
@@ -78,7 +78,7 @@ export default function AltimeterScreen() {
             </Text>
           </>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -89,10 +89,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.instrumentBg,
   },
   body: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xl,
   },
   center: {
     alignItems: 'center',

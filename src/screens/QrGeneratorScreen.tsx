@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import QRCode from 'react-native-qrcode-svg';
@@ -18,7 +18,7 @@ export default function QrGeneratorScreen() {
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="QR Generator" onBack={goHome} />
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <TextInput
           value={text}
           onChangeText={setText}
@@ -34,7 +34,7 @@ export default function QrGeneratorScreen() {
             <Text style={styles.hint}>Type something to generate a scannable QR code</Text>
           )}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -42,7 +42,7 @@ export default function QrGeneratorScreen() {
 const createStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.bg },
-    body: { flex: 1, padding: spacing.lg, gap: spacing.lg },
+    body: { flexGrow: 1, padding: spacing.lg, gap: spacing.lg, paddingBottom: spacing.xl },
     input: {
       minHeight: 64,
       backgroundColor: colors.card,

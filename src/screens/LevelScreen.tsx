@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { DeviceMotion } from 'expo-sensors';
 import { successHaptic } from '../haptics';
@@ -83,7 +83,7 @@ export default function LevelScreen() {
           <Text style={styles.unavailableText}>Motion sensor is not available on this device.</Text>
         </View>
       ) : (
-        <View style={styles.body}>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
           {/* Bullseye */}
           <View style={styles.bullseye}>
             <View style={styles.ringOuter} />
@@ -125,7 +125,7 @@ export default function LevelScreen() {
               <Text style={styles.buttonText}>Reset</Text>
             </Pressable>
           </View>
-        </View>
+        </ScrollView>
       )}
     </View>
   );
@@ -150,10 +150,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.instrumentBg,
   },
   body: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xl,
   },
   unavailable: {
     flex: 1,

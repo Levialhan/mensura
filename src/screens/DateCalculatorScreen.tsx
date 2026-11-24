@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
@@ -39,7 +39,7 @@ export default function DateCalculatorScreen() {
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Date Calculator" onBack={goHome} />
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <Text style={styles.label}>Days between</Text>
         <View style={styles.row}>
           <TextInput value={from} onChangeText={setFrom} placeholder="Start (YYYY-MM-DD)" placeholderTextColor={colors.textMuted} style={styles.input} />
@@ -53,7 +53,7 @@ export default function DateCalculatorScreen() {
           <TextInput value={days} onChangeText={setDays} placeholder="± days" placeholderTextColor={colors.textMuted} keyboardType="numbers-and-punctuation" style={styles.input} />
         </View>
         {resultDate && <Text style={styles.result}>{fmtDate(resultDate)}</Text>}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -61,7 +61,7 @@ export default function DateCalculatorScreen() {
 const createStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.bg },
-    body: { flex: 1, padding: spacing.lg },
+    body: { flexGrow: 1, padding: spacing.lg, paddingBottom: spacing.xl },
     label: { fontSize: font.sm, fontWeight: '700', color: colors.textMuted, textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: spacing.sm },
     row: { flexDirection: 'row', gap: spacing.sm },
     input: {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
@@ -44,7 +44,7 @@ export default function NumberBaseScreen() {
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Number Base" onBack={goHome} />
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         <View style={styles.segment}>
           {BASES.map((b) => (
             <Pressable key={b.id} style={[styles.segmentBtn, base === b.id && styles.segmentActive]} onPress={() => selectBase(b.id)}>
@@ -73,7 +73,7 @@ export default function NumberBaseScreen() {
         ) : (
           <Text style={styles.hint}>Enter a number to convert</Text>
         )}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -92,7 +92,7 @@ function Row({ label, value, styles }: { label: string; value: string; styles: R
 const createStyles = (colors: ThemeColors) =>
   StyleSheet.create({
     safe: { flex: 1, backgroundColor: colors.bg },
-    body: { flex: 1, padding: spacing.lg, gap: spacing.lg },
+    body: { flexGrow: 1, padding: spacing.lg, gap: spacing.lg, paddingBottom: spacing.xl },
     segment: { flexDirection: 'row', backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: 4 },
     segmentBtn: { flex: 1, alignItems: 'center', paddingVertical: spacing.sm, borderRadius: radius.sm },
     segmentActive: { backgroundColor: colors.primary },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { LightSensor } from 'expo-sensors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -49,7 +49,7 @@ export default function LightMeterScreen() {
     <View style={[styles.root, { paddingTop: insets.top }]}>
       <StatusBar style="light" />
       <ScreenHeader title="Light Meter" onBack={goHome} dark />
-      <View style={styles.body}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.body} showsVerticalScrollIndicator={false}>
         {!available ? (
           <View style={styles.center}>
             <MaterialCommunityIcons name="white-balance-sunny" size={48} color={colors.instrumentMuted} />
@@ -65,14 +65,14 @@ export default function LightMeterScreen() {
             </View>
           </>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.instrumentBg },
-  body: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl },
+  body: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl },
   center: { alignItems: 'center', gap: spacing.md },
   muted: { color: colors.instrumentMuted, fontSize: font.sm, textAlign: 'center' },
   lux: { color: colors.instrumentText, fontSize: 88, fontWeight: '800', fontVariant: ['tabular-nums'], letterSpacing: -2 },
