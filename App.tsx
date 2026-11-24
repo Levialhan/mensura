@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, BackHandler, Platform, ToastAndroid } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppStore } from './src/store/useAppStore';
 import { useTheme } from './src/hooks/useTheme';
@@ -122,8 +123,23 @@ function AnimatedRouter() {
   );
 }
 
+// Keep the native splash screen visible until preferences are rehydrated, so
+// a saved dark theme doesn't flash white on launch.
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
 export default function App() {
   useExitOnBack();
+  const hydrated = useAppStore((s) => s.hydrated);
+
+  useEffect(() => {
+    if (hydrated) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [hydrated]);
+
+  if (!hydrated) {
+    return null;
+  }
 
   return (
     <SafeAreaProvider>

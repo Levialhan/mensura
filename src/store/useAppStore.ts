@@ -40,6 +40,8 @@ interface AppState {
   categoryOrder: Category[];
   /** Whether the first-run onboarding hint has been dismissed. */
   onboarded: boolean;
+  /** True once persisted preferences have been rehydrated from storage. */
+  hydrated: boolean;
   navigate: (screen: Screen) => void;
   goHome: () => void;
   unlockPro: () => void;
@@ -63,6 +65,7 @@ export const useAppStore = create<AppState>((set) => ({
   recents: [],
   categoryOrder: ['measure', 'convert', 'sensors', 'everyday'],
   onboarded: false,
+  hydrated: false,
 
   navigate: (screen) => set({ screen }),
   goHome: () => set({ screen: 'home' }),
@@ -110,21 +113,25 @@ const PREF_KEY = 'mensura-preferences';
 // Rehydrate saved preferences on startup.
 AsyncStorage.getItem(PREF_KEY)
   .then((raw) => {
-    if (!raw) return;
-    const parsed = JSON.parse(raw) as Record<string, unknown>;
-    const strArr = (v: unknown): string[] => (Array.isArray(v) ? (v as string[]) : []);
-    useAppStore.setState({
-      theme: parsed.theme === 'dark' ? 'dark' : 'light',
-      favorites: strArr(parsed.favorites) as ToolId[],
-      hiddenTools: strArr(parsed.hiddenTools) as ToolId[],
-      recents: strArr(parsed.recents) as ToolId[],
-      categoryOrder: (strArr(parsed.categoryOrder) as Category[]).length
-        ? (strArr(parsed.categoryOrder) as Category[])
-        : ['measure', 'convert', 'sensors', 'everyday'],
-      onboarded: parsed.onboarded === true,
-    });
+    if (raw) {
+      const parsed = JSON.parse(raw) as Record<string, unknown>;
+      const strArr = (v: unknown): string[] => (Array.isArray(v) ? (v as string[]) : []);
+      useAppStore.setState({
+        theme: parsed.theme === 'dark' ? 'dark' : 'light',
+        favorites: strArr(parsed.favorites) as ToolId[],
+        hiddenTools: strArr(parsed.hiddenTools) as ToolId[],
+        recents: strArr(parsed.recents) as ToolId[],
+        categoryOrder: (strArr(parsed.categoryOrder) as Category[]).length
+          ? (strArr(parsed.categoryOrder) as Category[])
+          : ['measure', 'convert', 'sensors', 'everyday'],
+        onboarded: parsed.onboarded === true,
+      });
+    }
+    useAppStore.setState({ hydrated: true });
   })
-  .catch(() => {});
+  .catch(() => {
+    useAppStore.setState({ hydrated: true });
+  });
 
 // Persist preferences whenever they change.
 let prev = JSON.stringify({
