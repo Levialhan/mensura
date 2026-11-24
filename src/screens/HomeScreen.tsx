@@ -1,8 +1,10 @@
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Haptics from 'expo-haptics';
 import { CATEGORIES, TOOLS, type Tool } from '../config/tools';
 import { useAppStore } from '../store/useAppStore';
 import ToolCard from '../components/ToolCard';
@@ -13,9 +15,15 @@ export default function HomeScreen() {
   const isPro = useAppStore((s) => s.isPro);
   const favorites = useAppStore((s) => s.favorites);
   const hiddenTools = useAppStore((s) => s.hiddenTools);
+  const recents = useAppStore((s) => s.recents);
   const toggleFavorite = useAppStore((s) => s.toggleFavorite);
+  const recordRecent = useAppStore((s) => s.recordRecent);
+  const [search, setSearch] = useState('');
 
-  const handleToggleFavorite = (tool: Tool) => toggleFavorite(tool.id);
+  const handleToggleFavorite = (tool: Tool) => {
+    toggleFavorite(tool.id);
+    Haptics.selectionAsync().catch(() => {});
+  };
 
   const handlePress = (tool: Tool) => {
     if (tool.tier === 'pro' && !isPro) {
@@ -26,12 +34,29 @@ export default function HomeScreen() {
       Alert.alert('Coming soon', `${tool.name} is on its way.`);
       return;
     }
+    recordRecent(tool.id);
+    Haptics.selectionAsync().catch(() => {});
     navigate(tool.screen);
   };
 
+  const query = search.trim().toLowerCase();
   const visible = TOOLS.filter((t) => !hiddenTools.includes(t.id));
+  const searched = query
+    ? visible.filter(
+        (t) => t.name.toLowerCase().includes(query) || t.subtitle.toLowerCase().includes(query),
+      )
+    : null;
+
   const favoriteTools = visible.filter((t) => favorites.includes(t.id));
-  const rest = visible.filter((t) => !favorites.includes(t.id));
+  const recentTools = recents
+    .map((id) => TOOLS.find((t) => t.id === id))
+    .filter(
+      (t): t is Tool => !!t && !hiddenTools.includes(t.id) && !favorites.includes(t.id),
+    )
+    .slice(0, 4);
+  const rest = visible.filter(
+    (t) => !favorites.includes(t.id) && !recentTools.some((r) => r.id === t.id),
+  );
   const sections = CATEGORIES.map((c) => ({
     category: c,
     tools: rest.filter((t) => t.category === c.id),
@@ -40,7 +65,11 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
       <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.header}>
           <View style={styles.headerText}>
             <Text style={styles.title}>Mensura</Text>
@@ -57,27 +86,92 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
+        <View style={styles.searchBar}>
+          <MaterialCommunityIcons name="magnify" size={18} color={colors.textMuted} />
+          <TextInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Search tools"
+            placeholderTextColor={colors.textMuted}
+            style={styles.searchInput}
+            returnKeyType="search"
+            autoCorrect={false}
+          />
+          {search.length > 0 && (
+            <Pressable onPress={() => setSearch('')} hitSlop={8}>
+              <MaterialCommunityIcons name="close-circle" size={18} color={colors.textMuted} />
+            </Pressable>
+          )}
+        </View>
+
         {!isPro && <ProBanner onPress={() => navigate('pro')} />}
 
-        {favoriteTools.length > 0 && (
-          <View style={styles.section}>
-            <SectionTitle icon="star" label="Favorites" />
-            <ToolGrid tools={favoriteTools} isPro={isPro} favorites={favorites} onPress={handlePress} onToggleFavorite={handleToggleFavorite} />
-          </View>
-        )}
+        {searched ? (
+          searched.length > 0 ? (
+            <View style={styles.section}>
+              <SectionTitle icon="magnify" label={`Results (${searched.length})`} />
+              <ToolGrid
+                tools={searched}
+                isPro={isPro}
+                favorites={favorites}
+                onPress={handlePress}
+                onToggleFavorite={handleToggleFavorite}
+              />
+            </View>
+          ) : (
+            <View style={styles.emptyWrap}>
+              <MaterialCommunityIcons name="magnify-close" size={32} color={colors.textMuted} />
+              <Text style={styles.emptyText}>No tools match “{search.trim()}”.</Text>
+            </View>
+          )
+        ) : (
+          <>
+            {favoriteTools.length > 0 && (
+              <View style={styles.section}>
+                <SectionTitle icon="star" label="Favorites" />
+                <ToolGrid
+                  tools={favoriteTools}
+                  isPro={isPro}
+                  favorites={favorites}
+                  onPress={handlePress}
+                  onToggleFavorite={handleToggleFavorite}
+                />
+              </View>
+            )}
 
-        {sections.map((s) => (
-          <View key={s.category.id} style={styles.section}>
-            <SectionTitle icon={s.category.icon} label={s.category.label} />
-            <ToolGrid tools={s.tools} isPro={isPro} favorites={favorites} onPress={handlePress} onToggleFavorite={handleToggleFavorite} />
-          </View>
-        ))}
+            {recentTools.length > 0 && (
+              <View style={styles.section}>
+                <SectionTitle icon="history" label="Recent" />
+                <ToolGrid
+                  tools={recentTools}
+                  isPro={isPro}
+                  favorites={favorites}
+                  onPress={handlePress}
+                  onToggleFavorite={handleToggleFavorite}
+                />
+              </View>
+            )}
 
-        {visible.length === 0 && (
-          <View style={styles.emptyWrap}>
-            <MaterialCommunityIcons name="tray-remove" size={36} color={colors.textMuted} />
-            <Text style={styles.emptyText}>All tools are hidden.{'\n'}Open settings to show them again.</Text>
-          </View>
+            {sections.map((s) => (
+              <View key={s.category.id} style={styles.section}>
+                <SectionTitle icon={s.category.icon} label={s.category.label} />
+                <ToolGrid
+                  tools={s.tools}
+                  isPro={isPro}
+                  favorites={favorites}
+                  onPress={handlePress}
+                  onToggleFavorite={handleToggleFavorite}
+                />
+              </View>
+            ))}
+
+            {visible.length === 0 && (
+              <View style={styles.emptyWrap}>
+                <MaterialCommunityIcons name="tray-remove" size={36} color={colors.textMuted} />
+                <Text style={styles.emptyText}>All tools are hidden.{'\n'}Open settings to show them again.</Text>
+              </View>
+            )}
+          </>
         )}
 
         <View style={styles.footer}>
@@ -157,7 +251,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
   },
   headerText: { flex: 1 },
   title: { fontSize: font.xxl, fontWeight: '800', color: colors.text, letterSpacing: -0.5 },
@@ -172,6 +266,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    backgroundColor: colors.card,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
+    height: 44,
+    marginBottom: spacing.lg,
+  },
+  searchInput: { flex: 1, fontSize: font.sm, color: colors.text, padding: 0 },
   banner: {
     flexDirection: 'row',
     alignItems: 'center',

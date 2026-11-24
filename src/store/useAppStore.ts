@@ -41,12 +41,15 @@ interface AppState {
   favorites: ToolId[];
   /** Tool ids the user has hidden. */
   hiddenTools: ToolId[];
+  /** Recently opened tools, most-recent first (max 8). */
+  recents: ToolId[];
   navigate: (screen: Screen) => void;
   goHome: () => void;
   unlockPro: () => void;
   restorePro: () => void;
   toggleFavorite: (id: ToolId) => void;
   toggleHidden: (id: ToolId) => void;
+  recordRecent: (id: ToolId) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -56,6 +59,7 @@ export const useAppStore = create<AppState>((set) => ({
   isPro: __DEV__,
   favorites: [],
   hiddenTools: [],
+  recents: [],
 
   navigate: (screen) => set({ screen }),
   goHome: () => set({ screen: 'home' }),
@@ -79,18 +83,26 @@ export const useAppStore = create<AppState>((set) => ({
         ? s.hiddenTools.filter((x) => x !== id)
         : [...s.hiddenTools, id],
     })),
+
+  recordRecent: (id) =>
+    set((s) => ({ recents: [id, ...s.recents.filter((x) => x !== id)].slice(0, 8) })),
 }));
 
 const PREF_KEY = 'mensura-preferences';
 
-// Rehydrate saved preferences (favorites + hidden tools) on startup.
+// Rehydrate saved preferences (favorites, hidden tools, recents) on startup.
 AsyncStorage.getItem(PREF_KEY)
   .then((raw) => {
     if (!raw) return;
-    const parsed = JSON.parse(raw) as { favorites?: unknown; hiddenTools?: unknown };
+    const parsed = JSON.parse(raw) as {
+      favorites?: unknown;
+      hiddenTools?: unknown;
+      recents?: unknown;
+    };
     useAppStore.setState({
       favorites: Array.isArray(parsed.favorites) ? (parsed.favorites as ToolId[]) : [],
       hiddenTools: Array.isArray(parsed.hiddenTools) ? (parsed.hiddenTools as ToolId[]) : [],
+      recents: Array.isArray(parsed.recents) ? (parsed.recents as ToolId[]) : [],
     });
   })
   .catch(() => {});
@@ -98,13 +110,23 @@ AsyncStorage.getItem(PREF_KEY)
 // Persist preferences whenever they change.
 let prevFavorites = useAppStore.getState().favorites;
 let prevHidden = useAppStore.getState().hiddenTools;
+let prevRecents = useAppStore.getState().recents;
 useAppStore.subscribe((state) => {
-  if (state.favorites !== prevFavorites || state.hiddenTools !== prevHidden) {
+  if (
+    state.favorites !== prevFavorites ||
+    state.hiddenTools !== prevHidden ||
+    state.recents !== prevRecents
+  ) {
     prevFavorites = state.favorites;
     prevHidden = state.hiddenTools;
+    prevRecents = state.recents;
     AsyncStorage.setItem(
       PREF_KEY,
-      JSON.stringify({ favorites: state.favorites, hiddenTools: state.hiddenTools }),
+      JSON.stringify({
+        favorites: state.favorites,
+        hiddenTools: state.hiddenTools,
+        recents: state.recents,
+      }),
     ).catch(() => {});
   }
 });

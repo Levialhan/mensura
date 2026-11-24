@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { BackHandler, Platform, ToastAndroid } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Animated, BackHandler, Platform, ToastAndroid } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppStore } from './src/store/useAppStore';
 import HomeScreen from './src/screens/HomeScreen';
@@ -97,12 +97,33 @@ function useExitOnBack() {
   }, []);
 }
 
+function AnimatedRouter() {
+  const screen = useAppStore((s) => s.screen);
+  const [opacity] = useState(() => new Animated.Value(1));
+  const [translateY] = useState(() => new Animated.Value(0));
+
+  useEffect(() => {
+    opacity.setValue(0);
+    translateY.setValue(10);
+    Animated.parallel([
+      Animated.timing(opacity, { toValue: 1, duration: 180, useNativeDriver: true }),
+      Animated.timing(translateY, { toValue: 0, duration: 180, useNativeDriver: true }),
+    ]).start();
+  }, [screen, opacity, translateY]);
+
+  return (
+    <Animated.View style={{ flex: 1, opacity, transform: [{ translateY }] }}>
+      <Router />
+    </Animated.View>
+  );
+}
+
 export default function App() {
   useExitOnBack();
 
   return (
     <SafeAreaProvider>
-      <Router />
+      <AnimatedRouter />
     </SafeAreaProvider>
   );
 }
