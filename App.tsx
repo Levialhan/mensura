@@ -19,9 +19,16 @@ import MagnifierScreen from './src/screens/MagnifierScreen';
 import FlashlightScreen from './src/screens/FlashlightScreen';
 import QrScannerScreen from './src/screens/QrScannerScreen';
 import AltimeterScreen from './src/screens/AltimeterScreen';
-import PedometerScreen from './src/screens/PedometerScreen';
-import SpeedometerScreen from './src/screens/SpeedometerScreen';
 import SoundLevelMeterScreen from './src/screens/SoundLevelMeterScreen';
+import LightMeterScreen from './src/screens/LightMeterScreen';
+import MirrorScreen from './src/screens/MirrorScreen';
+import MetronomeScreen from './src/screens/MetronomeScreen';
+import QrGeneratorScreen from './src/screens/QrGeneratorScreen';
+import DateCalculatorScreen from './src/screens/DateCalculatorScreen';
+import PercentageScreen from './src/screens/PercentageScreen';
+import RandomNumberScreen from './src/screens/RandomNumberScreen';
+import TallyCounterScreen from './src/screens/TallyCounterScreen';
+import NumberBaseScreen from './src/screens/NumberBaseScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import ProScreen from './src/screens/ProScreen';
 
@@ -57,10 +64,24 @@ function Router() {
       return <QrScannerScreen />;
     case 'altimeter':
       return <AltimeterScreen />;
-    case 'pedometer':
-      return <PedometerScreen />;
-    case 'speedometer':
-      return <SpeedometerScreen />;
+    case 'lightmeter':
+      return <LightMeterScreen />;
+    case 'mirror':
+      return <MirrorScreen />;
+    case 'metronome':
+      return <MetronomeScreen />;
+    case 'qrgen':
+      return <QrGeneratorScreen />;
+    case 'datecalc':
+      return <DateCalculatorScreen />;
+    case 'percent':
+      return <PercentageScreen />;
+    case 'randnum':
+      return <RandomNumberScreen />;
+    case 'tally':
+      return <TallyCounterScreen />;
+    case 'baseconv':
+      return <NumberBaseScreen />;
     case 'sound':
       return <SoundLevelMeterScreen />;
     case 'settings':

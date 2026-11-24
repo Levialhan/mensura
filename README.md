@@ -4,9 +4,9 @@ A private, offline **pocket measurement toolkit** for Android & iOS — built wi
 
 ## Tools
 
-**Free:** Level · Compass · Calculator · Unit Converter · Countdown · Tip Split · Stopwatch · Random
+**Free:** Level · Compass · Calculator · Unit Converter · Countdown · Tip Split · Stopwatch · Random · QR Generator · Date Calculator · Percentage · Random Number · Tally Counter · Number Base
 
-**Pro (one-time unlock):** Ruler · Protractor · Magnifier · Flashlight · QR Scanner · Altimeter · Pedometer · Speedometer · Sound Meter
+**Pro (one-time unlock):** Ruler · Protractor · Magnifier · Flashlight · QR Scanner · Altimeter · Sound Meter · Light Meter · Mirror · Metronome
 
 ## Development
 
@@ -40,7 +40,7 @@ npx eas-cli submit --platform android                       # upload to Play Con
 
 ## Play Store launch checklist
 
-1. ✅ App code complete (10 tools) — typecheck, lint, expo-doctor clean
+1. ✅ App code complete (24 tools) — typecheck, lint, expo-doctor clean
 2. ✅ EAS project linked: `@glacyte/mensura`
 3. ✅ Custom icon + splash (`assets/`)
 4. ✅ Store listing copy (`store/listing.md`)

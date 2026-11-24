@@ -22,6 +22,12 @@ Mensura turns your phone into a precise, private pocket measurement toolkit — 
 • **Tip Split** — calculate tips and split the bill, with presets and per-person breakdown.
 • **Stopwatch** — a lap timer with split times.
 • **Random** — roll dice, flip a coin, or spin a decision wheel.
+• **QR Generator** — create a scannable QR code from any text or link.
+• **Date Calculator** — find the number of days between two dates.
+• **Percentage** — calculate percentages, percentage change, and sale prices.
+• **Random Number** — generate a random number in any range.
+• **Tally Counter** — a simple tap counter for people or items.
+• **Number Base** — convert between hex, binary, octal, and decimal.
 
 **MENSURA PRO** (one-time unlock, no subscription)
 
@@ -31,13 +37,14 @@ Mensura turns your phone into a precise, private pocket measurement toolkit — 
 • **Flashlight** — turn your camera flash into a torch, with a strobe mode.
 • **QR Scanner** — scan QR codes and open or share the result instantly.
 • **Altimeter** — read air pressure and relative altitude with the built-in barometer.
-• **Pedometer** — count your steps and estimate distance.
-• **Speedometer** — see your live speed from GPS.
 • **Sound Meter** — measure the noise level around you.
+• **Light Meter** — measure ambient light in lux.
+• **Mirror** — use your front camera as a mirror.
+• **Metronome** — a metronome with adjustable tempo and tap tempo.
 
 **PRIVATE BY DESIGN**
 
-Mensura requires no account and sends nothing to any server. Camera, microphone, location, and motion sensors are used only on-device, and no measurement is ever stored or shared. No ads, no analytics, no tracking.
+Mensura requires no account and sends nothing to any server. Camera, microphone, and motion sensors are used only on-device, and no measurement is ever stored or shared. No ads, no analytics, no tracking.
 
 Upgrade to Pro once and unlock the full toolkit forever.
 
@@ -45,4 +52,4 @@ Upgrade to Pro once and unlock the full toolkit forever.
 Tools
 
 ## Keywords (for search)
-measurement, level, ruler, compass, protractor, flashlight, torch, qr scanner, unit converter, tip calculator, stopwatch, countdown, calculator, random, dice, coin, wheel, magnifier, pedometer, speedometer, sound meter, decibel, altimeter, barometer, angle, offline tools, diy, carpenter, handyman
+measurement, level, ruler, compass, protractor, flashlight, torch, qr scanner, qr generator, unit converter, tip calculator, stopwatch, countdown, calculator, random, dice, coin, wheel, random number, tally counter, percentage, date calculator, number base, hex, binary, magnifier, sound meter, decibel, light meter, lux, mirror, metronome, altimeter, barometer, angle, offline tools, diy, carpenter, handyman

@@ -1,6 +1,6 @@
 # Mensura — Privacy Policy
 
-_Last updated: November 23, 2026_
+_Last updated: November 24, 2026_
 
 Mensura ("the app") is built on a simple principle: your data stays on your device. This policy explains, in plain language, what the app does and does not collect.
 
@@ -16,15 +16,15 @@ Mensura ("the app") is built on a simple principle: your data stays on your devi
 
 Mensura uses certain device capabilities to provide its tools. All of this happens locally on your device and is never recorded or transmitted:
 
-- **Camera** — used only for the Flashlight (torch), QR Scanner, and Magnifier tools. The camera feed is processed on-device and is never saved or uploaded.
+- **Camera** — used only for the Flashlight (torch), QR Scanner, Mirror, and Magnifier tools. The camera feed is processed on-device and is never saved or uploaded.
 - **Microphone** — used only by the Sound Meter tool to measure ambient noise. Audio is processed on-device and is never recorded or uploaded.
-- **Location** — used only by the Speedometer tool to read your speed. It is processed on-device and never stored or uploaded.
-- **Motion sensors** (accelerometer, gyroscope, magnetometer, pedometer) — used by the Level, Compass, and Pedometer tools to compute tilt, heading, and steps in real time. No readings are stored.
+- **Motion sensors** (accelerometer, gyroscope, magnetometer) — used by the Level and Compass tools to compute tilt and heading in real time. No readings are stored.
 - **Barometer** — used by the Altimeter tool to estimate air pressure and relative altitude. No readings are stored.
+- **Light sensor** — used by the Light Meter tool to measure ambient light in lux. No readings are stored.
 
 ## Permissions
 
-The app may request camera, microphone, or location access when you use the Flashlight, QR Scanner, Magnifier, Sound Meter, or Speedometer. You can decline any of these and continue using the other tools.
+The app may request camera or microphone access when you use the Flashlight, QR Scanner, Mirror, Magnifier, or Sound Meter. You can decline any of these and continue using the other tools.
 
 ## Children's privacy
 
