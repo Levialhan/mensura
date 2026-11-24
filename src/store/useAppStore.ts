@@ -42,7 +42,9 @@ interface AppState {
 
 export const useAppStore = create<AppState>((set) => ({
   screen: 'home',
-  isPro: false,
+  // Pro is unlocked automatically in development (Expo Go / dev builds) so the
+  // whole toolkit can be reviewed without the paywall; production stays locked.
+  isPro: __DEV__,
 
   navigate: (screen) => set({ screen }),
   goHome: () => set({ screen: 'home' }),
