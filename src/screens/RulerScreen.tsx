@@ -18,6 +18,7 @@ const DEFAULT_PX_PER_CM = 37.8; // ~96 dpi on-screen
 const CARD_CM = 8.56; // bank card width (85.6 mm)
 
 type Unit = 'cm' | 'in';
+type Orientation = 'horizontal' | 'vertical';
 
 interface Tick {
   x: number;
@@ -25,11 +26,11 @@ interface Tick {
   label?: string;
 }
 
-function buildTicks(unit: Unit, pxPerCm: number, width: number): Tick[] {
+function buildTicks(unit: Unit, pxPerCm: number, length: number): Tick[] {
   const ticks: Tick[] = [];
   if (unit === 'cm') {
     const minor = pxPerCm / 10;
-    const count = Math.floor(width / minor) + 1;
+    const count = Math.floor(length / minor) + 1;
     for (let i = 0; i < count; i++) {
       const major = i % 10 === 0;
       const medium = !major && i % 5 === 0;
@@ -42,7 +43,7 @@ function buildTicks(unit: Unit, pxPerCm: number, width: number): Tick[] {
   } else {
     const pxPerInch = pxPerCm * 2.54;
     const minor = pxPerInch / 8;
-    const count = Math.floor(width / minor) + 1;
+    const count = Math.floor(length / minor) + 1;
     for (let i = 0; i < count; i++) {
       const major = i % 8 === 0;
       const medium = !major && i % 4 === 0;
@@ -58,13 +59,15 @@ function buildTicks(unit: Unit, pxPerCm: number, width: number): Tick[] {
 
 export default function RulerScreen() {
   const goHome = useAppStore((s) => s.goHome);
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const [unit, setUnit] = useState<Unit>('cm');
+  const [orientation, setOrientation] = useState<Orientation>('horizontal');
   const [pxPerCm, setPxPerCm] = useState(DEFAULT_PX_PER_CM);
   const [calibrating, setCalibrating] = useState(false);
 
-  const ticks = buildTicks(unit, pxPerCm, width);
-  const contentWidth = Math.max(width, (ticks[ticks.length - 1]?.x ?? 0) + spacing.xl);
+  const length = orientation === 'horizontal' ? width : height - 260;
+  const ticks = buildTicks(unit, pxPerCm, Math.max(200, length));
+  const contentLength = Math.max(length, (ticks[ticks.length - 1]?.x ?? 0) + spacing.xl);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
@@ -73,35 +76,73 @@ export default function RulerScreen() {
         title="Ruler"
         onBack={goHome}
         right={
-          <Pressable onPress={() => setUnit((u) => (u === 'cm' ? 'in' : 'cm'))} style={styles.unitBtn}>
-            <Text style={styles.unitBtnText}>{unit === 'cm' ? 'cm' : 'in'}</Text>
-          </Pressable>
+          <View style={styles.headerBtns}>
+            <Pressable
+              onPress={() => setOrientation((o) => (o === 'horizontal' ? 'vertical' : 'horizontal'))}
+              style={styles.unitBtn}
+              accessibilityLabel="Toggle orientation"
+            >
+              <MaterialCommunityIcons
+                name={orientation === 'horizontal' ? 'arrow-up-down' : 'arrow-left-right'}
+                size={18}
+                color={colors.primary}
+              />
+            </Pressable>
+            <Pressable onPress={() => setUnit((u) => (u === 'cm' ? 'in' : 'cm'))} style={styles.unitBtn}>
+              <Text style={styles.unitBtnText}>{unit === 'cm' ? 'cm' : 'in'}</Text>
+            </Pressable>
+          </View>
         }
       />
 
       <View style={styles.body}>
-        <View style={styles.rulerWrap}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ minWidth: width }}>
-            <View style={[styles.ruler, { width: contentWidth }]}>
-              {ticks.map((t, i) => (
-                <Fragment key={i}>
-                  <View
-                    style={[
-                      styles.tick,
-                      {
-                        left: t.x,
-                        height: t.kind === 'major' ? 44 : t.kind === 'medium' ? 30 : 18,
-                        width: t.kind === 'major' ? 2 : 1,
-                        backgroundColor: t.kind === 'major' ? colors.text : colors.textMuted,
-                      },
-                    ]}
-                  />
-                  {t.label != null && <Text style={[styles.tickLabel, { left: t.x - 18 }]}>{t.label}</Text>}
-                </Fragment>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
+        {orientation === 'horizontal' ? (
+          <View style={styles.rulerWrapH}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ minWidth: width }}>
+              <View style={[styles.rulerH, { width: contentLength }]}>
+                {ticks.map((t, i) => (
+                  <Fragment key={i}>
+                    <View
+                      style={[
+                        styles.tickH,
+                        {
+                          left: t.x,
+                          height: t.kind === 'major' ? 44 : t.kind === 'medium' ? 30 : 18,
+                          width: t.kind === 'major' ? 2 : 1,
+                          backgroundColor: t.kind === 'major' ? colors.text : colors.textMuted,
+                        },
+                      ]}
+                    />
+                    {t.label != null && <Text style={[styles.tickLabelH, { left: t.x - 18 }]}>{t.label}</Text>}
+                  </Fragment>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        ) : (
+          <View style={styles.rulerWrapV}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ minHeight: height - 260 }}>
+              <View style={[styles.rulerV, { height: contentLength }]}>
+                {ticks.map((t, i) => (
+                  <Fragment key={i}>
+                    <View
+                      style={[
+                        styles.tickV,
+                        {
+                          top: t.x,
+                          width: t.kind === 'major' ? 44 : t.kind === 'medium' ? 30 : 18,
+                          height: t.kind === 'major' ? 2 : 1,
+                          backgroundColor: t.kind === 'major' ? colors.text : colors.textMuted,
+                        },
+                      ]}
+                    />
+                    {t.label != null && <Text style={[styles.tickLabelV, { top: t.x - 9 }]}>{t.label}</Text>}
+                  </Fragment>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        )}
 
         <Text style={styles.scale}>{pxPerCm.toFixed(1)} px / cm</Text>
 
@@ -207,20 +248,16 @@ function CalibrateCard({
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: colors.bg,
-  },
-  body: {
-    flex: 1,
-    padding: spacing.lg,
-    gap: spacing.lg,
-  },
+  safe: { flex: 1, backgroundColor: colors.bg },
+  body: { flex: 1, padding: spacing.lg, gap: spacing.lg },
+  headerBtns: { flexDirection: 'row', gap: spacing.sm },
   unitBtn: {
     paddingHorizontal: spacing.md,
     paddingVertical: 4,
     borderRadius: radius.sm,
     backgroundColor: colors.primarySoft,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   unitBtnText: {
     color: colors.primary,
@@ -228,24 +265,24 @@ const styles = StyleSheet.create({
     fontSize: font.sm,
     textTransform: 'uppercase',
   },
-  rulerWrap: {
-    marginTop: spacing.xl,
-    height: 90,
-    justifyContent: 'flex-end',
-  },
-  ruler: {
-    position: 'relative',
-    height: 90,
-  },
-  tick: {
-    position: 'absolute',
-    bottom: 0,
-  },
-  tickLabel: {
+  rulerWrapH: { marginTop: spacing.xl, height: 90, justifyContent: 'flex-end' },
+  rulerH: { position: 'relative', height: 90 },
+  tickH: { position: 'absolute', bottom: 0 },
+  tickLabelH: {
     position: 'absolute',
     bottom: 52,
     width: 36,
     textAlign: 'center',
+    fontSize: font.xs,
+    color: colors.textMuted,
+  },
+  rulerWrapV: { flex: 1, marginTop: spacing.lg, width: 90, alignSelf: 'center' },
+  rulerV: { position: 'relative', width: 90 },
+  tickV: { position: 'absolute', left: 0 },
+  tickLabelV: {
+    position: 'absolute',
+    left: 52,
+    width: 36,
     fontSize: font.xs,
     color: colors.textMuted,
   },
@@ -279,11 +316,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     backgroundColor: colors.primarySoft,
   },
-  calBtnText: {
-    color: colors.primary,
-    fontWeight: '700',
-    fontSize: font.sm,
-  },
+  calBtnText: { color: colors.primary, fontWeight: '700', fontSize: font.sm },
   overlay: {
     position: 'absolute',
     top: 0,
@@ -302,11 +335,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.lg,
     padding: spacing.xl,
   },
-  cardTitle: {
-    fontSize: font.lg,
-    fontWeight: '800',
-    color: colors.text,
-  },
+  cardTitle: { fontSize: font.lg, fontWeight: '800', color: colors.text },
   cardHint: {
     fontSize: font.sm,
     color: colors.textMuted,
@@ -356,11 +385,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
     fontVariant: ['tabular-nums'],
   },
-  cardActions: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    marginTop: spacing.xl,
-  },
+  cardActions: { flexDirection: 'row', gap: spacing.md, marginTop: spacing.xl },
   cardCancel: {
     flex: 1,
     alignItems: 'center',
@@ -370,11 +395,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  cardCancelText: {
-    color: colors.text,
-    fontWeight: '600',
-    fontSize: font.sm,
-  },
+  cardCancelText: { color: colors.text, fontWeight: '600', fontSize: font.sm },
   cardDone: {
     flex: 1,
     alignItems: 'center',
@@ -382,9 +403,5 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     backgroundColor: colors.primary,
   },
-  cardDoneText: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: font.sm,
-  },
+  cardDoneText: { color: '#FFFFFF', fontWeight: '700', fontSize: font.sm },
 });

@@ -19,6 +19,39 @@ const CX = WHEEL / 2;
 const CY = WHEEL / 2;
 const R = WHEEL / 2 - 6;
 
+const DIE_SIZE = 150;
+
+// ---- Column-major 4x4 matrices (React Native `matrix` transform convention) ----
+type Matrix = number[];
+
+const rad = (d: number) => (d * Math.PI) / 180;
+
+function matMul(a: Matrix, b: Matrix): Matrix {
+  const r = new Array(16).fill(0);
+  for (let c = 0; c < 4; c++) {
+    for (let row = 0; row < 4; row++) {
+      let s = 0;
+      for (let k = 0; k < 4; k++) s += a[k * 4 + row] * b[c * 4 + k];
+      r[c * 4 + row] = s;
+    }
+  }
+  return r;
+}
+
+const rotateX = (deg: number): Matrix => {
+  const c = Math.cos(rad(deg));
+  const s = Math.sin(rad(deg));
+  return [1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1];
+};
+
+const rotateY = (deg: number): Matrix => {
+  const c = Math.cos(rad(deg));
+  const s = Math.sin(rad(deg));
+  return [c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1];
+};
+
+const translateZ = (d: number): Matrix => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, d, 1];
+
 const polar = (angleDeg: number, radius: number) => {
   const a = (angleDeg * Math.PI) / 180;
   return { x: CX + radius * Math.cos(a), y: CY + radius * Math.sin(a) };
@@ -35,7 +68,7 @@ function slicePath(i: number) {
 export default function RandomPickerScreen() {
   const goHome = useAppStore((s) => s.goHome);
   const [mode, setMode] = useState<Mode>('dice');
-  const [dice, setDice] = useState(1);
+  const [diceResult, setDiceResult] = useState<number | null>(null);
   const [coin, setCoin] = useState<'heads' | 'tails' | null>(null);
   const [wheelResult, setWheelResult] = useState<string | null>(null);
 
@@ -49,9 +82,11 @@ export default function RandomPickerScreen() {
   const flipping = useRef(false);
   const rolling = useRef(false);
 
-  // Interpolations (3D)
-  const coinRotateY = coinAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '1080deg'] });
+  // Coin: rotateX so the coin flips top-over-bottom (a real toss).
+  const coinRotateX = coinAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '1080deg'] });
   const coinLift = coinAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, -28, 0] });
+
+  // Dice: tumbling cube.
   const diceRotateX = diceAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '720deg'] });
   const diceRotateY = diceAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '540deg'] });
   const diceRotateZ = diceAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
@@ -59,19 +94,17 @@ export default function RandomPickerScreen() {
   const rollDice = () => {
     if (rolling.current) return;
     rolling.current = true;
-    const result = Math.floor(Math.random() * 6) + 1;
+    const finalResult = Math.floor(Math.random() * 6) + 1;
 
     diceAnim.setValue(0);
-    Animated.timing(diceAnim, { toValue: 1, duration: 850, useNativeDriver: true }).start(() => {
+    Animated.timing(diceAnim, { toValue: 1, duration: 900, useNativeDriver: true }).start(() => {
       rolling.current = false;
-      setDice(result);
+      setDiceResult(finalResult);
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     });
 
-    // Rapidly cycle through faces while it "rolls"
-    const id = setInterval(() => {
-      setDice(Math.floor(Math.random() * 6) + 1);
-    }, 70);
+    // Cycle the result label while it rolls.
+    const id = setInterval(() => setDiceResult(Math.floor(Math.random() * 6) + 1), 100);
     setTimeout(() => clearInterval(id), 850);
   };
 
@@ -87,7 +120,6 @@ export default function RandomPickerScreen() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
     });
 
-    // Swap faces at each half-flip
     let side: 'heads' | 'tails' = 'heads';
     const id = setInterval(() => {
       side = side === 'heads' ? 'tails' : 'heads';
@@ -137,18 +169,23 @@ export default function RandomPickerScreen() {
         <View style={styles.stage}>
           {mode === 'dice' && (
             <>
-              <Animated.View
-                style={{
-                  transform: [
-                    { perspective: 800 },
-                    { rotateX: diceRotateX },
-                    { rotateY: diceRotateY },
-                    { rotateZ: diceRotateZ },
-                  ],
-                }}
-              >
-                <Die value={dice} />
-              </Animated.View>
+              <View style={styles.cubeScene}>
+                <Animated.View
+                  style={{
+                    width: DIE_SIZE,
+                    height: DIE_SIZE,
+                    transform: [
+                      { perspective: 700 },
+                      { rotateX: diceRotateX },
+                      { rotateY: diceRotateY },
+                      { rotateZ: diceRotateZ },
+                    ],
+                  }}
+                >
+                  <Cube />
+                </Animated.View>
+              </View>
+              <Text style={styles.resultLabel}>{diceResult != null ? diceResult : 'Roll the die'}</Text>
               <Pressable style={styles.primaryBtn} onPress={rollDice}>
                 <MaterialCommunityIcons name="dice-5" size={20} color="#FFFFFF" />
                 <Text style={styles.primaryBtnText}>Roll</Text>
@@ -159,13 +196,7 @@ export default function RandomPickerScreen() {
           {mode === 'coin' && (
             <>
               <Animated.View
-                style={{
-                  transform: [
-                    { perspective: 1000 },
-                    { rotateY: coinRotateY },
-                    { translateY: coinLift },
-                  ],
-                }}
+                style={{ transform: [{ perspective: 1000 }, { rotateX: coinRotateX }, { translateY: coinLift }] }}
               >
                 <Coin face={coin} />
               </Animated.View>
@@ -214,15 +245,39 @@ const DIE_GRID: Record<number, boolean[]> = {
   6: [true, false, true, true, false, true, true, false, true],
 };
 
-function Die({ value }: { value: number }) {
+function Pips({ value }: { value: number }) {
   return (
-    <View style={styles.die}>
+    <View style={styles.face}>
       {DIE_GRID[value].map((on, i) => (
-        <View key={i} style={styles.dieCell}>
-          {on && <View style={styles.dot} />}
+        <View key={i} style={styles.pipCell}>
+          {on && <View style={styles.pip} />}
         </View>
       ))}
     </View>
+  );
+}
+
+function Cube() {
+  const half = DIE_SIZE / 2;
+  const faces: { value: number; matrix: Matrix }[] = [
+    { value: 1, matrix: translateZ(half) },
+    { value: 6, matrix: matMul(rotateY(180), translateZ(half)) },
+    { value: 3, matrix: matMul(rotateY(90), translateZ(half)) },
+    { value: 4, matrix: matMul(rotateY(-90), translateZ(half)) },
+    { value: 5, matrix: matMul(rotateX(90), translateZ(half)) },
+    { value: 2, matrix: matMul(rotateX(-90), translateZ(half)) },
+  ];
+  return (
+    <>
+      {faces.map((f) => (
+        <View
+          key={f.value}
+          style={[styles.cubeFace, { width: DIE_SIZE, height: DIE_SIZE, transform: [{ matrix: f.matrix }] }]}
+        >
+          <Pips value={f.value} />
+        </View>
+      ))}
+    </>
   );
 }
 
@@ -254,29 +309,35 @@ const styles = StyleSheet.create({
   tabText: { color: colors.text, fontWeight: '700', fontSize: font.sm },
   tabTextActive: { color: '#FFFFFF' },
   stage: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.xl },
-  die: {
-    width: 160,
-    height: 160,
-    borderRadius: radius.lg,
-    backgroundColor: colors.card,
+  cubeScene: { width: DIE_SIZE, height: DIE_SIZE },
+  cubeFace: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    backgroundColor: '#FFFFFF',
     borderWidth: 2,
     borderColor: colors.border,
+    borderRadius: 12,
+  },
+  face: {
+    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 14,
+    padding: 12,
   },
-  dieCell: {
+  pipCell: {
     width: '33.33%',
     height: '33.33%',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  dot: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+  pip: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     backgroundColor: colors.text,
   },
+  resultLabel: { fontSize: font.xl, fontWeight: '700', color: colors.text, fontVariant: ['tabular-nums'] },
   coin: {
     width: 160,
     height: 160,
