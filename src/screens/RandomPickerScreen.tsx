@@ -49,14 +49,12 @@ export default function RandomPickerScreen() {
   const flipping = useRef(false);
   const rolling = useRef(false);
 
-  // Interpolations
-  const coinScaleX = coinAnim.interpolate({
-    inputRange: [0, 0.166, 0.333, 0.5, 0.666, 0.833, 1],
-    outputRange: [1, 0.08, 1, 0.08, 1, 0.08, 1],
-  });
-  const coinLift = coinAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, -24, 0] });
-  const diceRotate = diceAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
-  const diceScale = diceAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [1, 1.15, 1] });
+  // Interpolations (3D)
+  const coinRotateY = coinAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '1080deg'] });
+  const coinLift = coinAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, -28, 0] });
+  const diceRotateX = diceAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '720deg'] });
+  const diceRotateY = diceAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '540deg'] });
+  const diceRotateZ = diceAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
 
   const rollDice = () => {
     if (rolling.current) return;
@@ -139,7 +137,16 @@ export default function RandomPickerScreen() {
         <View style={styles.stage}>
           {mode === 'dice' && (
             <>
-              <Animated.View style={{ transform: [{ rotate: diceRotate }, { scale: diceScale }] }}>
+              <Animated.View
+                style={{
+                  transform: [
+                    { perspective: 800 },
+                    { rotateX: diceRotateX },
+                    { rotateY: diceRotateY },
+                    { rotateZ: diceRotateZ },
+                  ],
+                }}
+              >
                 <Die value={dice} />
               </Animated.View>
               <Pressable style={styles.primaryBtn} onPress={rollDice}>
@@ -151,7 +158,15 @@ export default function RandomPickerScreen() {
 
           {mode === 'coin' && (
             <>
-              <Animated.View style={{ transform: [{ scaleX: coinScaleX }, { translateY: coinLift }] }}>
+              <Animated.View
+                style={{
+                  transform: [
+                    { perspective: 1000 },
+                    { rotateY: coinRotateY },
+                    { translateY: coinLift },
+                  ],
+                }}
+              >
                 <Coin face={coin} />
               </Animated.View>
               <Pressable style={styles.primaryBtn} onPress={flipCoin}>
