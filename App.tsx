@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Animated, BackHandler, Platform, ToastAndroid } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppStore } from './src/store/useAppStore';
+import { useTheme } from './src/hooks/useTheme';
 import HomeScreen from './src/screens/HomeScreen';
 import LevelScreen from './src/screens/LevelScreen';
 import CompassScreen from './src/screens/CompassScreen';
@@ -98,6 +99,7 @@ function useExitOnBack() {
 }
 
 function AnimatedRouter() {
+  const { colors } = useTheme();
   const screen = useAppStore((s) => s.screen);
   const [opacity] = useState(() => new Animated.Value(1));
   const [translateY] = useState(() => new Animated.Value(0));
@@ -112,7 +114,9 @@ function AnimatedRouter() {
   }, [screen, opacity, translateY]);
 
   return (
-    <Animated.View style={{ flex: 1, opacity, transform: [{ translateY }] }}>
+    <Animated.View
+      style={{ flex: 1, backgroundColor: colors.bg, opacity, transform: [{ translateY }] }}
+    >
       <Router />
     </Animated.View>
   );
