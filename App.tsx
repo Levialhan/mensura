@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, BackHandler, Platform, ToastAndroid } from 'react-native';
+import { Animated, BackHandler, Platform, ToastAndroid, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppStore } from './src/store/useAppStore';
@@ -130,6 +130,7 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 export default function App() {
   useExitOnBack();
   const hydrated = useAppStore((s) => s.hydrated);
+  const { colors } = useTheme();
 
   useEffect(() => {
     if (hydrated) {
@@ -142,8 +143,10 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <AnimatedRouter />
-    </SafeAreaProvider>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <SafeAreaProvider>
+        <AnimatedRouter />
+      </SafeAreaProvider>
+    </View>
   );
 }

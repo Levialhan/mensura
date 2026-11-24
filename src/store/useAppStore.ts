@@ -125,9 +125,11 @@ AsyncStorage.getItem(PREF_KEY)
           ? (strArr(parsed.categoryOrder) as Category[])
           : ['measure', 'convert', 'sensors', 'everyday'],
         onboarded: parsed.onboarded === true,
+        hydrated: true,
       });
+    } else {
+      useAppStore.setState({ hydrated: true });
     }
-    useAppStore.setState({ hydrated: true });
   })
   .catch(() => {
     useAppStore.setState({ hydrated: true });
