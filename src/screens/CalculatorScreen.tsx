@@ -4,7 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 type KeyType = 'digit' | 'op' | 'equals' | 'clear' | 'negate' | 'percent' | 'decimal';
 
@@ -30,6 +31,8 @@ const fmt = (n: number) => String(parseFloat(n.toPrecision(12)));
 
 export default function CalculatorScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors, isDark } = useTheme();
+  const styles = createStyles(colors);
   const [display, setDisplay] = useState('0');
   const [accum, setAccum] = useState<number | null>(null);
   const [op, setOp] = useState<string | null>(null);
@@ -84,7 +87,7 @@ export default function CalculatorScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Calculator" onBack={goHome} />
       <View style={styles.body}>
         <Text style={styles.display} numberOfLines={1} adjustsFontSizeToFit>
@@ -113,7 +116,7 @@ export default function CalculatorScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   body: { flex: 1, padding: spacing.lg, justifyContent: 'flex-end' },
   display: {

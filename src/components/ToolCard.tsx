@@ -1,17 +1,21 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { Tool } from '../config/tools';
-import { colors, font, radius, spacing } from '../theme';
+import { useTheme } from '../hooks/useTheme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
 
 type Props = {
   tool: Tool;
   isPro: boolean;
   isFavorite: boolean;
   onPress: (tool: Tool) => void;
+  onLongPress: (tool: Tool) => void;
   onToggleFavorite: (tool: Tool) => void;
 };
 
-export default function ToolCard({ tool, isPro, isFavorite, onPress, onToggleFavorite }: Props) {
+export default function ToolCard({ tool, isPro, isFavorite, onPress, onLongPress, onToggleFavorite }: Props) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const locked = tool.tier === 'pro' && !isPro;
   const iconColor = locked ? colors.pro : colors.primary;
   const iconBg = locked ? colors.proSoft : colors.primarySoft;
@@ -19,9 +23,12 @@ export default function ToolCard({ tool, isPro, isFavorite, onPress, onToggleFav
   return (
     <Pressable
       onPress={() => onPress(tool)}
+      onLongPress={() => onLongPress(tool)}
+      delayLongPress={350}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
       accessibilityRole="button"
       accessibilityLabel={tool.name}
+      accessibilityHint="Long press for details"
     >
       <View style={styles.topRow}>
         <View style={[styles.iconWrap, { backgroundColor: iconBg }]}>
@@ -60,66 +67,67 @@ export default function ToolCard({ tool, isPro, isFavorite, onPress, onToggleFav
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    flex: 1,
-    backgroundColor: colors.card,
-    borderRadius: radius.lg,
-    padding: spacing.lg,
-    minHeight: 132,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  pressed: {
-    opacity: 0.7,
-    transform: [{ scale: 0.98 }],
-  },
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    marginBottom: spacing.md,
-  },
-  iconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 13,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  starBtn: {
-    padding: 2,
-  },
-  nameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  name: {
-    fontSize: font.md,
-    fontWeight: '700',
-    color: colors.text,
-    flexShrink: 1,
-  },
-  subtitle: {
-    fontSize: font.xs,
-    color: colors.textMuted,
-    marginTop: 2,
-    lineHeight: 16,
-  },
-  proChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: radius.pill,
-    backgroundColor: colors.proSoft,
-  },
-  proChipText: {
-    fontSize: 9,
-    fontWeight: '800',
-    letterSpacing: 0.4,
-    color: colors.pro,
-  },
-});
+const createStyles = (colors: ThemeColors) =>
+  StyleSheet.create({
+    card: {
+      flex: 1,
+      backgroundColor: colors.card,
+      borderRadius: radius.lg,
+      padding: spacing.lg,
+      minHeight: 132,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    pressed: {
+      opacity: 0.7,
+      transform: [{ scale: 0.98 }],
+    },
+    topRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      marginBottom: spacing.md,
+    },
+    iconWrap: {
+      width: 44,
+      height: 44,
+      borderRadius: 13,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    starBtn: {
+      padding: 2,
+    },
+    nameRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+    },
+    name: {
+      fontSize: font.md,
+      fontWeight: '700',
+      color: colors.text,
+      flexShrink: 1,
+    },
+    subtitle: {
+      fontSize: font.xs,
+      color: colors.textMuted,
+      marginTop: 2,
+      lineHeight: 16,
+    },
+    proChip: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 2,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+      borderRadius: radius.pill,
+      backgroundColor: colors.proSoft,
+    },
+    proChipText: {
+      fontSize: 9,
+      fontWeight: '800',
+      letterSpacing: 0.4,
+      color: colors.pro,
+    },
+  });

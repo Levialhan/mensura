@@ -6,10 +6,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
 import { CATEGORIES, convert, formatNumber, type Unit } from '../tools/units';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 export default function UnitConverterScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors, isDark } = useTheme();
+  const styles = createStyles(colors);
 
   const [categoryId, setCategoryId] = useState(CATEGORIES[0].id);
   const [value, setValue] = useState('1');
@@ -41,7 +44,7 @@ export default function UnitConverterScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Converter" onBack={goHome} />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -103,6 +106,8 @@ function UnitRow({
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.unitRow}>
       {units.map((u) => {
@@ -117,7 +122,7 @@ function UnitRow({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: colors.bg,

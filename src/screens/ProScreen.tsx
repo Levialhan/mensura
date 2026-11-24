@@ -4,7 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppStore } from '../store/useAppStore';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 const FEATURES = [
   { icon: 'ruler', text: 'Unlock Ruler, Protractor & Flashlight' },
@@ -17,6 +18,8 @@ const FEATURES = [
 
 export default function ProScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const unlockPro = useAppStore((s) => s.unlockPro);
   const restorePro = useAppStore((s) => s.restorePro);
 
@@ -74,7 +77,7 @@ export default function ProScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: colors.bg,

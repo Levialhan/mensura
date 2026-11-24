@@ -12,7 +12,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 const DEFAULT_PX_PER_CM = 37.8; // ~96 dpi on-screen
 const CARD_CM = 8.56; // bank card width (85.6 mm)
@@ -59,6 +60,8 @@ function buildTicks(unit: Unit, pxPerCm: number, length: number): Tick[] {
 
 export default function RulerScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors, isDark } = useTheme();
+  const styles = createStyles(colors);
   const { width, height } = useWindowDimensions();
   const [unit, setUnit] = useState<Unit>('cm');
   const [orientation, setOrientation] = useState<Orientation>('horizontal');
@@ -71,7 +74,7 @@ export default function RulerScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader
         title="Ruler"
         onBack={goHome}
@@ -184,6 +187,8 @@ function CalibrateCard({
   onDone: (pxPerCm: number) => void;
   onCancel: () => void;
 }) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const [pos, setPosState] = useState(160);
   const posRef = useRef(160);
   const startRef = useRef(160);
@@ -247,7 +252,7 @@ function CalibrateCard({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   body: { flex: 1, padding: spacing.lg, gap: spacing.lg },
   headerBtns: { flexDirection: 'row', gap: spacing.sm },

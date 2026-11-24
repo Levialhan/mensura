@@ -5,7 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 interface Lap {
   id: number;
@@ -23,6 +24,8 @@ const fmt = (ms: number) => {
 
 export default function StopwatchScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors, isDark } = useTheme();
+  const styles = createStyles(colors);
 
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(false);
@@ -69,7 +72,7 @@ export default function StopwatchScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Stopwatch" onBack={goHome} />
 
       <View style={styles.body}>
@@ -118,6 +121,8 @@ function ControlButton({
   disabled?: boolean;
   primary?: boolean;
 }) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   return (
     <Pressable
       onPress={onPress}
@@ -135,7 +140,7 @@ function ControlButton({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: colors.bg,

@@ -6,12 +6,15 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Svg, { Circle, Line, Path } from 'react-native-svg';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 const toRad = (d: number) => (d * Math.PI) / 180;
 
 export default function ProtractorScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors, isDark } = useTheme();
+  const styles = createStyles(colors);
   const { width } = useWindowDimensions();
   const size = Math.min(width - spacing.xl * 2, 380);
   const cx = size / 2;
@@ -39,7 +42,7 @@ export default function ProtractorScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Protractor" onBack={goHome} />
 
       <View style={styles.body}>
@@ -88,7 +91,7 @@ export default function ProtractorScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: colors.bg,

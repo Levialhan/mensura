@@ -5,7 +5,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 const PRESETS = [10, 15, 18, 20, 25];
 
@@ -13,6 +14,8 @@ const money = (n: number) => `$${n.toFixed(2)}`;
 
 export default function TipCalculatorScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors, isDark } = useTheme();
+  const styles = createStyles(colors);
 
   const [bill, setBill] = useState('');
   const [tipPct, setTipPct] = useState(18);
@@ -25,7 +28,7 @@ export default function TipCalculatorScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Tip Split" onBack={goHome} />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -100,6 +103,8 @@ function Stepper({
   max: number;
   suffix: string;
 }) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
   return (
     <View style={styles.stepper}>
@@ -118,6 +123,8 @@ function Stepper({
 }
 
 function ResultRow({ label, value, strong, accent }: { label: string; value: string; strong?: boolean; accent?: boolean }) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   return (
     <View style={styles.resultRow}>
       <Text style={styles.resultLabel}>{label}</Text>
@@ -134,7 +141,7 @@ function ResultRow({ label, value, strong, accent }: { label: string; value: str
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: colors.bg,

@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { colors, font, spacing } from '../theme';
+import { font, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 type Props = {
   title: string;
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export default function ScreenHeader({ title, onBack, right, dark }: Props) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   const fg = dark ? colors.instrumentText : colors.text;
   return (
     <View style={styles.row}>
@@ -32,7 +35,7 @@ export default function ScreenHeader({ title, onBack, right, dark }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',

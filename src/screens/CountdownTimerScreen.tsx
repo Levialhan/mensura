@@ -6,13 +6,16 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 const PRESETS = [1, 3, 5, 10];
 const pad = (n: number) => String(n).padStart(2, '0');
 
 export default function CountdownTimerScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors, isDark } = useTheme();
+  const styles = createStyles(colors);
   const [remaining, setRemaining] = useState(5 * 60 * 1000);
   const [running, setRunning] = useState(false);
   const endRef = useRef(0);
@@ -57,7 +60,7 @@ export default function CountdownTimerScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Countdown" onBack={goHome} />
 
       <View style={styles.body}>
@@ -108,7 +111,7 @@ export default function CountdownTimerScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   body: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg, gap: spacing.xl },
   time: {

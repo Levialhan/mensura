@@ -1,9 +1,11 @@
 /**
- * Mensura design tokens.
- * Light, "precision instrument" aesthetic with a dark instrument surface
- * for the live-sensor tools (level, compass).
+ * Mensura design tokens — light + dark palettes.
+ *
+ * Accent colors (primary, pro, success, danger) and the dark "instrument"
+ * surfaces are shared across both themes; only the app chrome (backgrounds,
+ * cards, text, borders, soft tints) changes between light and dark.
  */
-export const colors = {
+export const lightColors = {
   // App chrome (light)
   bg: '#F4F6FB',
   card: '#FFFFFF',
@@ -23,13 +25,30 @@ export const colors = {
   success: '#16A34A',
   danger: '#DC2626',
 
-  // Instrument surfaces (dark)
+  // Instrument surfaces (always dark)
   instrumentBg: '#0B1220',
   instrumentPanel: '#131D32',
   instrumentText: '#E8EEF9',
   instrumentMuted: '#7C8AA5',
   instrumentAccent: '#34D399',
 };
+
+export type ThemeColors = typeof lightColors;
+
+export const darkColors: ThemeColors = {
+  ...lightColors,
+  bg: '#0B1220',
+  card: '#16203A',
+  text: '#E8EEF9',
+  textMuted: '#8A97B0',
+  border: '#26324D',
+  primarySoft: '#1E2A47',
+  proSoft: '#2B2510',
+};
+
+// Backward-compatible static export for the dark "instrument" screens, which
+// are theme-independent.
+export const colors = lightColors;
 
 export const spacing = {
   xs: 4,

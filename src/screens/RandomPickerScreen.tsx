@@ -7,7 +7,8 @@ import Svg, { Circle, Path, Polygon } from 'react-native-svg';
 import * as Haptics from 'expo-haptics';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
-import { colors, font, radius, spacing } from '../theme';
+import { font, radius, spacing, type ThemeColors } from '../theme';
+import { useTheme } from '../hooks/useTheme';
 
 type Mode = 'dice' | 'coin' | 'wheel';
 
@@ -81,6 +82,8 @@ function slicePath(i: number) {
 
 export default function RandomPickerScreen() {
   const goHome = useAppStore((s) => s.goHome);
+  const { colors, isDark } = useTheme();
+  const styles = createStyles(colors);
   const [mode, setMode] = useState<Mode>('dice');
   const [diceResult, setDiceResult] = useState<number | null>(null);
   const [coin, setCoin] = useState<'heads' | 'tails' | null>(null);
@@ -160,7 +163,7 @@ export default function RandomPickerScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
-      <StatusBar style="dark" />
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <ScreenHeader title="Random" onBack={goHome} />
 
       <View style={styles.body}>
@@ -239,6 +242,8 @@ export default function RandomPickerScreen() {
 }
 
 function Coin({ face }: { face: 'heads' | 'tails' | null }) {
+  const { colors } = useTheme();
+  const styles = createStyles(colors);
   return (
     <View style={styles.coin}>
       <Text style={styles.coinText}>{face === null ? '?' : face === 'heads' ? 'H' : 'T'}</Text>
@@ -247,7 +252,7 @@ function Coin({ face }: { face: 'heads' | 'tails' | null }) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: ThemeColors) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   body: { flex: 1, padding: spacing.lg, alignItems: 'center' },
   tabs: { flexDirection: 'row', gap: spacing.sm, marginBottom: spacing.xl },
