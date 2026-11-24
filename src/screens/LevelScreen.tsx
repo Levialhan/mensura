@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { DeviceMotion } from 'expo-sensors';
-import * as Haptics from 'expo-haptics';
+import { successHaptic } from '../haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ScreenHeader from '../components/ScreenHeader';
@@ -61,7 +61,7 @@ export default function LevelScreen() {
 
   useEffect(() => {
     if (leveled && !leveledRef.current) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+      successHaptic();
     }
     leveledRef.current = leveled;
   }, [leveled]);

@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Svg, { Circle, Path, Polygon } from 'react-native-svg';
-import * as Haptics from 'expo-haptics';
+import { successHaptic } from '../haptics';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
 import { font, radius, spacing, type ThemeColors } from '../theme';
@@ -117,7 +117,7 @@ export default function RandomPickerScreen() {
     Animated.timing(diceAnim, { toValue: 1, duration: 900, useNativeDriver: true }).start(() => {
       rolling.current = false;
       setDiceResult(finalResult);
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+      successHaptic();
     });
 
     const id = setInterval(() => setDiceResult(Math.floor(Math.random() * 6) + 1), 90);
@@ -133,7 +133,7 @@ export default function RandomPickerScreen() {
     Animated.timing(coinAnim, { toValue: 1, duration: 1100, useNativeDriver: true }).start(() => {
       flipping.current = false;
       setCoin(result);
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+      successHaptic();
     });
 
     let side: 'heads' | 'tails' = 'heads';
@@ -157,7 +157,7 @@ export default function RandomPickerScreen() {
     Animated.timing(rotation, { toValue: target, duration: 2600, useNativeDriver: true }).start(() => {
       spinning.current = false;
       setWheelResult(WHEEL_OPTIONS[i]);
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+      successHaptic();
     });
   };
 

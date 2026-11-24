@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import { tapHaptic } from '../haptics';
 import ScreenHeader from '../components/ScreenHeader';
 import { useAppStore } from '../store/useAppStore';
 import { useTheme } from '../hooks/useTheme';
@@ -21,7 +21,7 @@ export default function TallyCounterScreen() {
     const now = Date.now();
     if (now - lastTap.current > 60) {
       lastTap.current = now;
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      tapHaptic();
     }
   };
 

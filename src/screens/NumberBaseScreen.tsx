@@ -14,6 +14,13 @@ const BASES = [
   { id: 2, label: 'Bin' },
 ] as const;
 
+const BASE_FILTER: Record<number, RegExp> = {
+  16: /[^0-9a-fA-F]/g,
+  10: /[^0-9]/g,
+  8: /[^0-7]/g,
+  2: /[^01]/g,
+};
+
 const toBase = (n: number, b: number) => n.toString(b).toUpperCase();
 
 export default function NumberBaseScreen() {
@@ -24,8 +31,13 @@ export default function NumberBaseScreen() {
   const [input, setInput] = useState('');
   const [base, setBase] = useState<number>(10);
 
-  const cleaned = input.trim().replace(/[^0-9a-fA-F]/g, '');
-  const value = cleaned ? parseInt(cleaned, base) : null;
+  const selectBase = (b: number) => {
+    setBase(b);
+    setInput((prev) => prev.replace(BASE_FILTER[b], ''));
+  };
+
+  const trimmed = input.trim();
+  const value = trimmed ? parseInt(trimmed, base) : null;
   const valid = value != null && !isNaN(value);
 
   return (
@@ -35,7 +47,7 @@ export default function NumberBaseScreen() {
       <View style={styles.body}>
         <View style={styles.segment}>
           {BASES.map((b) => (
-            <Pressable key={b.id} style={[styles.segmentBtn, base === b.id && styles.segmentActive]} onPress={() => setBase(b.id)}>
+            <Pressable key={b.id} style={[styles.segmentBtn, base === b.id && styles.segmentActive]} onPress={() => selectBase(b.id)}>
               <Text style={[styles.segmentText, base === b.id && styles.segmentActiveText]}>{b.label}</Text>
             </Pressable>
           ))}
@@ -43,7 +55,7 @@ export default function NumberBaseScreen() {
 
         <TextInput
           value={input}
-          onChangeText={setInput}
+          onChangeText={(text) => setInput(text.replace(BASE_FILTER[base], ''))}
           placeholder={base === 16 ? 'e.g. FF' : base === 2 ? 'e.g. 1010' : 'Number'}
           placeholderTextColor={colors.textMuted}
           autoCapitalize="none"
