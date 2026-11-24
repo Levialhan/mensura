@@ -39,18 +39,63 @@ export default function RandomPickerScreen() {
   const [coin, setCoin] = useState<'heads' | 'tails' | null>(null);
   const [wheelResult, setWheelResult] = useState<string | null>(null);
 
+  // Animated values (state so they're stable across renders)
   const [rotation] = useState(() => new Animated.Value(0));
+  const [coinAnim] = useState(() => new Animated.Value(0));
+  const [diceAnim] = useState(() => new Animated.Value(0));
+
   const rotationVal = useRef(0);
   const spinning = useRef(false);
+  const flipping = useRef(false);
+  const rolling = useRef(false);
+
+  // Interpolations
+  const coinScaleX = coinAnim.interpolate({
+    inputRange: [0, 0.166, 0.333, 0.5, 0.666, 0.833, 1],
+    outputRange: [1, 0.08, 1, 0.08, 1, 0.08, 1],
+  });
+  const coinLift = coinAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, -24, 0] });
+  const diceRotate = diceAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
+  const diceScale = diceAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [1, 1.15, 1] });
 
   const rollDice = () => {
-    setDice(Math.floor(Math.random() * 6) + 1);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    if (rolling.current) return;
+    rolling.current = true;
+    const result = Math.floor(Math.random() * 6) + 1;
+
+    diceAnim.setValue(0);
+    Animated.timing(diceAnim, { toValue: 1, duration: 850, useNativeDriver: true }).start(() => {
+      rolling.current = false;
+      setDice(result);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    });
+
+    // Rapidly cycle through faces while it "rolls"
+    const id = setInterval(() => {
+      setDice(Math.floor(Math.random() * 6) + 1);
+    }, 70);
+    setTimeout(() => clearInterval(id), 850);
   };
 
   const flipCoin = () => {
-    setCoin(Math.random() < 0.5 ? 'heads' : 'tails');
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    if (flipping.current) return;
+    flipping.current = true;
+    const result: 'heads' | 'tails' = Math.random() < 0.5 ? 'heads' : 'tails';
+
+    coinAnim.setValue(0);
+    Animated.timing(coinAnim, { toValue: 1, duration: 1100, useNativeDriver: true }).start(() => {
+      flipping.current = false;
+      setCoin(result);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    });
+
+    // Swap faces at each half-flip
+    let side: 'heads' | 'tails' = 'heads';
+    const id = setInterval(() => {
+      side = side === 'heads' ? 'tails' : 'heads';
+      setCoin(side);
+    }, 183);
+    setTimeout(() => clearInterval(id), 1100);
   };
 
   const spinWheel = () => {
@@ -94,7 +139,9 @@ export default function RandomPickerScreen() {
         <View style={styles.stage}>
           {mode === 'dice' && (
             <>
-              <Die value={dice} />
+              <Animated.View style={{ transform: [{ rotate: diceRotate }, { scale: diceScale }] }}>
+                <Die value={dice} />
+              </Animated.View>
               <Pressable style={styles.primaryBtn} onPress={rollDice}>
                 <MaterialCommunityIcons name="dice-5" size={20} color="#FFFFFF" />
                 <Text style={styles.primaryBtnText}>Roll</Text>
@@ -104,7 +151,9 @@ export default function RandomPickerScreen() {
 
           {mode === 'coin' && (
             <>
-              <Coin face={coin} />
+              <Animated.View style={{ transform: [{ scaleX: coinScaleX }, { translateY: coinLift }] }}>
+                <Coin face={coin} />
+              </Animated.View>
               <Pressable style={styles.primaryBtn} onPress={flipCoin}>
                 <MaterialCommunityIcons name="circle-multiple" size={20} color="#FFFFFF" />
                 <Text style={styles.primaryBtnText}>Flip</Text>

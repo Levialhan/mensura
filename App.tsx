@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+import { BackHandler, Platform, ToastAndroid } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppStore } from './src/store/useAppStore';
 import HomeScreen from './src/screens/HomeScreen';
@@ -66,7 +68,35 @@ function Router() {
   }
 }
 
+function useExitOnBack() {
+  const lastPress = useRef(0);
+
+  useEffect(() => {
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      const { screen, goHome } = useAppStore.getState();
+      // From any tool screen, go back to the home grid.
+      if (screen !== 'home') {
+        goHome();
+        return true;
+      }
+      // On the home screen: require a second tap within 2s to actually exit.
+      const now = Date.now();
+      if (now - lastPress.current < 2000) {
+        return false; // allow the app to exit
+      }
+      lastPress.current = now;
+      if (Platform.OS === 'android') {
+        ToastAndroid.show('Tap again to exit', ToastAndroid.SHORT);
+      }
+      return true;
+    });
+    return () => sub.remove();
+  }, []);
+}
+
 export default function App() {
+  useExitOnBack();
+
   return (
     <SafeAreaProvider>
       <Router />
